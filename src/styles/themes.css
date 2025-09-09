@@ -1,0 +1,243 @@
+/* Theme Variables */
+/* Mario Light Mode Only Theme */
+:root.mario-theme {
+  /* Super Mario Color Palette */
+  --mario-red: 220 100% 50%;        /* Mario's hat red */
+  --mario-blue: 210 100% 55%;       /* Mario's overalls blue */
+  --mario-yellow: 50 100% 60%;      /* Coin/Star yellow */
+  --mario-green: 120 100% 40%;      /* Luigi green */
+  --mario-orange: 25 100% 55%;      /* Fire flower orange */
+  --mario-purple: 270 80% 60%;      /* Power-up purple */
+  
+  /* Main theme colors using Mario palette */
+  --primary: var(--mario-red);
+  --primary-foreground: 0 0% 100%;
+  --secondary: var(--mario-blue);
+  --secondary-foreground: 0 0% 100%;
+  --muted: var(--mario-yellow);
+  --muted-foreground: 0 0% 20%;
+  --accent: var(--mario-green);
+  --accent-foreground: 0 0% 100%;
+  --destructive: var(--mario-orange);
+  --destructive-foreground: 0 0% 100%;
+  --border: var(--mario-blue);
+  --input: 0 0% 100%;
+  --ring: var(--mario-red);
+  --background: 200 100% 95%;
+  --foreground: 0 0% 10%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 10%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 10%;
+}
+
+
+
+/* Super Mario Theme Enhancements */
+.mario-theme {
+  /* Mario-specific gradients and effects */
+}
+
+.mario-theme .bg-primary { 
+  background: linear-gradient(135deg, #dc143c, #b22222); /* Mario red gradient */
+}
+
+.mario-theme .bg-secondary {
+  background: linear-gradient(135deg, #1e90ff, #0066cc); /* Mario blue gradient */
+}
+
+.mario-theme .bg-accent {
+  background: linear-gradient(135deg, #32cd32, #228b22); /* Luigi green gradient */
+}
+
+.mario-theme .bg-muted {
+  background: linear-gradient(135deg, #ffd700, #ffcc00); /* Coin yellow gradient */
+}
+
+/* Dynamic Mode Effects */
+.dynamic-mode {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dynamic-mode * {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dynamic-mode button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.dynamic-mode .bg-card {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+
+
+/* Animated backgrounds for dynamic mode */
+.dynamic-mode body {
+  background: linear-gradient(45deg, #dc143c, #1e90ff, #ffd700, #32cd32, #dc143c);
+  background-size: 500% 500%;
+  animation: marioBackgroundShift 4s ease infinite;
+}
+
+.dynamic-mode .bg-primary {
+  background: linear-gradient(45deg, #dc143c, #ff6347, #dc143c);
+  background-size: 300% 300%;
+  animation: gradientShift 1.5s ease infinite;
+}
+
+@keyframes marioBackgroundShift {
+  0% { background-position: 0% 50%; }
+  25% { background-position: 100% 50%; }
+  50% { background-position: 50% 100%; }
+  75% { background-position: 0% 50%; }
+  100% { background-position: 50% 0%; }
+}
+
+/* Mario Glow Effects */
+.mario-theme.dynamic-mode {
+  --glow-color: 220 100 50; /* Mario red glow */
+}
+
+/* Glow effects for dynamic mode */
+.dynamic-mode button:hover,
+.dynamic-mode .bg-card:hover {
+  box-shadow: 0 0 20px rgba(220, 20, 60, 0.6);
+}
+
+/* Pulsing elements */
+.dynamic-mode .animate-pulse {
+  animation: dynamicPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes dynamicPulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes backgroundShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Mario Theme Button Effects */
+.mario-theme button:hover { 
+  box-shadow: 0 4px 20px rgba(220, 20, 60, 0.6);
+  transform: translateY(-2px);
+}
+
+.mario-theme .calculate-button {
+  background: linear-gradient(135deg, #dc143c, #b22222);
+  border: 3px solid #ffd700;
+}
+
+.mario-theme .calculate-button:hover {
+  background: linear-gradient(135deg, #ff6347, #dc143c);
+  box-shadow: 0 6px 25px rgba(220, 20, 60, 0.8);
+}
+
+/* Light mode specific enhancements */
+.light {
+  --shadow-color: 0 0 0;
+}
+
+.light .bg-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 240, 255, 0.9));
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 100, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(255, 0, 150, 0.1);
+}
+
+/* Light mode input styling */
+.light input[type="text"],
+.light input[type="number"],
+.light input[type="email"],
+.light input[type="password"],
+.light input[type="tel"],
+.light input[type="url"] {
+  color: hsl(var(--foreground)) !important;
+  background-color: hsl(var(--background)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+.light input[type="text"]:focus,
+.light input[type="number"]:focus,
+.light input[type="email"]:focus,
+.light input[type="password"]:focus,
+.light input[type="tel"]:focus,
+.light input[type="url"]:focus {
+  color: hsl(var(--foreground)) !important;
+  background-color: hsl(var(--background)) !important;
+}
+
+/* Mario Light Mode Input Styling */
+.mario-theme.light input {
+  color: black !important;
+  background: linear-gradient(135deg, #ffffff, #fffacd) !important;
+  border: 2px solid #dc143c !important;
+}
+
+.mario-theme.light input::placeholder {
+  color: rgba(220, 20, 60, 0.6) !important;
+}
+
+.mario-theme.light input:focus {
+  border: 2px solid #1e90ff !important;
+  box-shadow: 0 0 10px rgba(30, 144, 255, 0.5) !important;
+}
+
+
+
+/* Mario Card Styling */
+.mario-theme .bg-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(255, 250, 205, 0.9));
+  backdrop-filter: blur(10px);
+  border: 2px solid #dc143c;
+  box-shadow: 0 4px 15px rgba(220, 20, 60, 0.2);
+}
+
+/* Utility classes */
+.bg-primary { background-color: hsl(var(--primary)); }
+.text-primary { color: hsl(var(--primary)); }
+.bg-primary-foreground { background-color: hsl(var(--primary-foreground)); }
+.text-primary-foreground { color: hsl(var(--primary-foreground)); }
+.bg-secondary { background-color: hsl(var(--secondary)); }
+.text-secondary { color: hsl(var(--secondary)); }
+.bg-secondary-foreground { background-color: hsl(var(--secondary-foreground)); }
+.text-secondary-foreground { color: hsl(var(--secondary-foreground)); }
+.bg-muted { background-color: hsl(var(--muted)); }
+.text-muted { color: hsl(var(--muted)); }
+.bg-muted-foreground { background-color: hsl(var(--muted-foreground)); }
+.text-muted-foreground { color: hsl(var(--muted-foreground)); }
+.bg-accent { background-color: hsl(var(--accent)); }
+.text-accent { color: hsl(var(--accent)); }
+.bg-accent-foreground { background-color: hsl(var(--accent-foreground)); }
+.text-accent-foreground { color: hsl(var(--accent-foreground)); }
+.bg-destructive { background-color: hsl(var(--destructive)); }
+.text-destructive { color: hsl(var(--destructive)); }
+.bg-destructive-foreground { background-color: hsl(var(--destructive-foreground)); }
+.text-destructive-foreground { color: hsl(var(--destructive-foreground)); }
+.border-border { border-color: hsl(var(--border)); }
+.bg-input { background-color: hsl(var(--input)); }
+.ring-ring { --tw-ring-color: hsl(var(--ring)); }
+.bg-background { background-color: hsl(var(--background)); }
+.text-foreground { color: hsl(var(--foreground)); }
+.bg-card { background-color: hsl(var(--card)); }
+.text-card-foreground { color: hsl(var(--card-foreground)); }
+.bg-popover { background-color: hsl(var(--popover)); }
+.text-popover-foreground { color: hsl(var(--popover-foreground)); }
