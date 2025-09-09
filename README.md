@@ -46,6 +46,10 @@ npm start
 
 4. Open your browser and navigate to `http://localhost:4028`
 
+## 🌐 Live Demo
+
+The application is deployed and available at: **https://thille6.github.io/soccerpredict_pro/**
+
 ## 📊 Calculation Methods
 
 ### Monte Carlo Simulation
