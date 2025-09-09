@@ -1,6 +1,7 @@
 {
-  "short_name": "soccerpredict-pro",
-  "name": "soccerpredict-pro",
+  "short_name": "SoccerPredict Pro",
+  "name": "SoccerPredict Pro - Soccer Match Prediction Calculator",
+  "description": "Advanced soccer match prediction calculator with Super Mario theme",
   "icons": [
     {
       "src": "favicon.ico",
@@ -10,6 +11,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#dc143c",
   "background_color": "#ffffff"
 }
