@@ -5,9 +5,12 @@ import ErrorBoundary from "components/ErrorBoundary";
 import NotFound from "pages/NotFound";
 import Calculator from './pages/calculator/index';
 
+// Get base name for GitHub Pages deployment
+const basename = import.meta.env.DEV ? '' : '/soccerpredict_pro';
+
 const Routes = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <ErrorBoundary>
       <ScrollToTop />
       <RouterRoutes>
