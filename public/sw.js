@@ -1,10 +1,18 @@
-// Service Worker för offline-stöd med network-first strategi
-const CACHE_NAME = 'soccerpredict-pro-v3-' + Date.now();
+// Service Worker för offline-stöd med aggressiv cache-busting
+const CACHE_NAME = 'soccerpredict-pro-v4-' + Date.now();
+const STATIC_CACHE = 'soccerpredict-static-v4-' + Date.now();
+const JS_CACHE = 'soccerpredict-js-v4-' + Date.now();
+
 const urlsToCache = [
   '/soccerpredict_pro/',
   '/soccerpredict_pro/index.html',
   '/soccerpredict_pro/manifest.json',
 ];
+
+// Hjälpfunktion för att identifiera JavaScript-filer
+function isJavaScriptAsset(url) {
+  return url.includes('/assets/') && (url.endsWith('.js') || url.includes('index-') && url.includes('.js'));
+}
 
 // Installation av service worker
 self.addEventListener('install', (event) => {
@@ -32,20 +40,20 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
+          if (cacheName !== CACHE_NAME && cacheName !== STATIC_CACHE && cacheName !== JS_CACHE) {
             console.log('Service Worker: Deleting old cache', cacheName);
             return caches.delete(cacheName);
           }
         })
       );
     }).then(() => {
-      console.log('Service Worker: Activation complete');
+      console.log('Service Worker: Activation complete - Force claiming all clients');
       return self.clients.claim();
     })
   );
 });
 
-// Fetch-händelser med network-first strategi
+// Fetch-händelser med specialiserad cache-strategi
 self.addEventListener('fetch', (event) => {
   // Endast hantera GET-förfrågningar
   if (event.request.method !== 'GET') {
@@ -58,14 +66,46 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  const url = event.request.url;
+  
+  // Specialhantering för JavaScript-assets - ALDRIG cache för index-*.js
+  if (isJavaScriptAsset(url)) {
+    console.log('Service Worker: JavaScript asset detected, forcing network fetch', url);
+    event.respondWith(
+      fetch(event.request, { cache: 'no-cache' })
+        .then((response) => {
+          if (response && response.status === 200) {
+            console.log('Service Worker: Fresh JS from network', url);
+            // Cacha INTE index-*.js filer alls
+            if (!url.includes('index-')) {
+              const responseToCache = response.clone();
+              caches.open(JS_CACHE).then((cache) => {
+                cache.put(event.request, responseToCache);
+              });
+            }
+            return response;
+          }
+          return response;
+        })
+        .catch(() => {
+          // Endast fallback för icke-index JS-filer
+          if (!url.includes('index-')) {
+            return caches.match(event.request);
+          }
+          return new Response('', { status: 404 });
+        })
+    );
+    return;
+  }
+
+  // Standard network-first för andra resurser
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // Om nätverket fungerar, använd det och uppdatera cache
         if (response && response.status === 200) {
-          console.log('Service Worker: Serving from network', event.request.url);
+          console.log('Service Worker: Serving from network', url);
           const responseToCache = response.clone();
-          caches.open(CACHE_NAME)
+          caches.open(STATIC_CACHE)
             .then((cache) => {
               cache.put(event.request, responseToCache);
             });
@@ -74,11 +114,10 @@ self.addEventListener('fetch', (event) => {
         return response;
       })
       .catch(() => {
-        // Om nätverket misslyckas, försök cache
         return caches.match(event.request)
           .then((response) => {
             if (response) {
-              console.log('Service Worker: Serving from cache (fallback)', event.request.url);
+              console.log('Service Worker: Serving from cache (fallback)', url);
               return response;
             }
             // Fallback för navigation
@@ -99,7 +138,16 @@ self.addEventListener('fetch', (event) => {
 // Hantera meddelanden från huvudtråden
 self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') {
+    console.log('Service Worker: Force skipping waiting');
     self.skipWaiting();
+  }
+  if (event.data && event.data.type === 'CLEAR_CACHE') {
+    console.log('Service Worker: Clearing all caches');
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => caches.delete(cacheName))
+      );
+    });
   }
 });
 

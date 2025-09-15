@@ -83,6 +83,34 @@ export const useServiceWorker = () => {
     }
   };
 
+  const forceClearCache = async () => {
+    try {
+      // Rensa Service Worker cache
+      if (swRegistration && swRegistration.active) {
+        swRegistration.active.postMessage({ type: 'CLEAR_CACHE' });
+      }
+      
+      // Rensa browser cache
+      if ('caches' in window) {
+        const cacheNames = await caches.keys();
+        await Promise.all(
+          cacheNames.map(cacheName => caches.delete(cacheName))
+        );
+        console.log('All caches cleared');
+      }
+      
+      // Tvinga fram omregistrering av Service Worker
+      await unregisterServiceWorker();
+      setTimeout(() => {
+        registerServiceWorker();
+        window.location.reload();
+      }, 500);
+      
+    } catch (error) {
+      console.error('Failed to clear cache:', error);
+    }
+  };
+
   const unregisterServiceWorker = async () => {
     if (swRegistration) {
       try {
@@ -102,7 +130,8 @@ export const useServiceWorker = () => {
     isInstalling,
     updateServiceWorker,
     unregisterServiceWorker,
-    registerServiceWorker
+    registerServiceWorker,
+    forceClearCache
   };
 };
 
