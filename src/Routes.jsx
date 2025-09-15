@@ -1,24 +1,33 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { BrowserRouter, Routes as RouterRoutes, Route } from "react-router-dom";
 import ScrollToTop from "components/ScrollToTop";
 import ErrorBoundary from "components/ErrorBoundary";
-import NotFound from "pages/NotFound";
-import Calculator from './pages/calculator/index';
+import LoadingSpinner from "./components/ui/LoadingSpinner";
 
-// Get base name for GitHub Pages deployment
-const basename = import.meta.env.DEV ? '' : '/soccerpredict_pro';
+// Lazy load components for better performance
+const Calculator = React.lazy(() => import('./pages/calculator/index'));
+const NotFound = React.lazy(() => import('pages/NotFound'));
+
+// Get base name for GitHub Pages deployment (disabled for local development)
+const basename = '';
 
 const Routes = () => {
   return (
     <BrowserRouter basename={basename}>
       <ErrorBoundary>
-      <ScrollToTop />
-      <RouterRoutes>
-        {/* Define your route here */}
-        <Route path="/" element={<Calculator />} />
-        <Route path="/calculator" element={<Calculator />} />
-        <Route path="*" element={<NotFound />} />
-      </RouterRoutes>
+        <ScrollToTop />
+        <Suspense fallback={
+          <div className="min-h-screen flex items-center justify-center">
+            <LoadingSpinner variant="spinner" size="lg" />
+          </div>
+        }>
+          <RouterRoutes>
+            {/* Define your route here */}
+            <Route path="/" element={<Calculator />} />
+            <Route path="/calculator" element={<Calculator />} />
+            <Route path="*" element={<NotFound />} />
+          </RouterRoutes>
+        </Suspense>
       </ErrorBoundary>
     </BrowserRouter>
   );
