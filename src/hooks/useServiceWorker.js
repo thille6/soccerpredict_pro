@@ -40,7 +40,9 @@ export const useServiceWorker = () => {
   const registerServiceWorker = async () => {
     try {
       setIsInstalling(true);
-      const registration = await navigator.serviceWorker.register('/sw.js');
+      // Använd import.meta.env.BASE_URL för att få rätt base path för GitHub Pages
+      const swPath = `${import.meta.env.BASE_URL}sw.js`;
+      const registration = await navigator.serviceWorker.register(swPath);
       setSwRegistration(registration);
       console.log('Service Worker: Registered successfully', registration);
 
