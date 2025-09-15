@@ -8,8 +8,8 @@ import LoadingSpinner from "./components/ui/LoadingSpinner";
 const Calculator = React.lazy(() => import('./pages/calculator/index'));
 const NotFound = React.lazy(() => import('pages/NotFound'));
 
-// Get base name for GitHub Pages deployment (disabled for local development)
-const basename = '';
+// Get base name for GitHub Pages deployment
+const basename = import.meta.env.MODE === 'production' ? '/soccerpredict_pro' : '';
 
 const Routes = () => {
   return (
