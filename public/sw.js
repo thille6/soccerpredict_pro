@@ -1,11 +1,9 @@
-// Service Worker för offline-stöd
-const CACHE_NAME = 'soccerpredict-pro-v1';
+// Service Worker för offline-stöd med network-first strategi
+const CACHE_NAME = 'soccerpredict-pro-v3-' + Date.now();
 const urlsToCache = [
-  '/',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
-  '/manifest.json',
-  // Lägg till andra viktiga resurser här
+  '/soccerpredict_pro/',
+  '/soccerpredict_pro/index.html',
+  '/soccerpredict_pro/manifest.json',
 ];
 
 // Installation av service worker
@@ -47,7 +45,7 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch-händelser för offline-stöd
+// Fetch-händelser med network-first strategi
 self.addEventListener('fetch', (event) => {
   // Endast hantera GET-förfrågningar
   if (event.request.method !== 'GET') {
@@ -61,45 +59,37 @@ self.addEventListener('fetch', (event) => {
   }
 
   event.respondWith(
-    caches.match(event.request)
+    fetch(event.request)
       .then((response) => {
-        // Returnera cachad version om den finns
-        if (response) {
-          console.log('Service Worker: Serving from cache', event.request.url);
+        // Om nätverket fungerar, använd det och uppdatera cache
+        if (response && response.status === 200) {
+          console.log('Service Worker: Serving from network', event.request.url);
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME)
+            .then((cache) => {
+              cache.put(event.request, responseToCache);
+            });
           return response;
         }
-
-        // Annars försök hämta från nätverket
-        return fetch(event.request)
+        return response;
+      })
+      .catch(() => {
+        // Om nätverket misslyckas, försök cache
+        return caches.match(event.request)
           .then((response) => {
-            // Kontrollera om vi fick ett giltigt svar
-            if (!response || response.status !== 200 || response.type !== 'basic') {
+            if (response) {
+              console.log('Service Worker: Serving from cache (fallback)', event.request.url);
               return response;
             }
-
-            // Klona svaret eftersom det är en stream
-            const responseToCache = response.clone();
-
-            // Lägg till i cache för framtida användning
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(event.request, responseToCache);
-              });
-
-            return response;
-          })
-          .catch(() => {
-            // Om nätverket misslyckas, visa offline-sida för navigering
+            // Fallback för navigation
             if (event.request.destination === 'document') {
-              return caches.match('/offline.html') || 
+              return caches.match('/soccerpredict_pro/index.html') || 
                      new Response('Offline - Applikationen är inte tillgänglig utan internetanslutning', {
                        status: 503,
                        statusText: 'Service Unavailable',
                        headers: { 'Content-Type': 'text/plain' }
                      });
             }
-            
-            // För andra resurser, returnera ett tomt svar
             return new Response('', { status: 404 });
           });
       })
