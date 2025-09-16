@@ -321,19 +321,19 @@ const CombinedCalculator = ({
 
   const getTitle = () => {
     switch (activeTab) {
-      case 'xg': return 'Expected Goals (xG) Kalkylator';
-      case 'poisson': return 'Poisson Distribution Kalkylator';
-      case 'montecarlo': return 'Monte Carlo Kalkylator';
-      default: return 'Fotbollsmatch Kalkylator';
+      case 'xg': return 'Expected Goals (xG) - Kvalitetsbaserad Analys';
+      case 'poisson': return 'Poisson-modell - Statistisk Sannolikhetsberäkning';
+      case 'montecarlo': return 'Monte Carlo - Avancerad Simuleringsanalys';
+      default: return 'Professionell Matchanalys';
     }
   };
 
   const getDescription = () => {
     switch (activeTab) {
-      case 'xg': return 'Beräknar matchsannolikheter baserat på Expected Goals (xG) - ett avancerat mått som visar kvaliteten på skottchanser. Perfekt när du har tillgång till xG-statistik från tidigare matcher.';
-      case 'poisson': return 'Använder Poisson-fördelning för att beräkna matchresultat baserat på lagens attack- och försvarsstyrka. En matematisk modell som fungerar bra för fotbollsmatcher där mål är relativt sällsynta händelser.';
-      case 'montecarlo': return 'Simulerar tusentals virtuella matcher med slumpmässig variation för att beräkna sannolikheter. Ger mer realistiska resultat genom att ta hänsyn till matchernas naturliga variation och osäkerhet.';
-      default: return 'Välj en beräkningsmetod för att se beskrivning.';
+      case 'xg': return 'Analyserar matchutfall genom Expected Goals (xG) - den mest moderna metoden inom fotbollsanalytik. Baserat på skottchansornas kvalitet och position ger denna metod djupgående insikter om lagens verkliga prestanda bortom bara mål och resultat.';
+      case 'poisson': return 'Använder Poisson-fördelning, en beprövad matematisk modell som är standard inom professionell sportsbetting. Perfekt för att förutsäga exakta resultat och målantal baserat på lagens historiska attack- och försvarsstyrka.';
+      case 'montecarlo': return 'Kör tusentals virtuella matcher med realistisk slumpvariation - samma teknik som används av professionella analysföretag. Ger de mest tillförlitliga sannolikheterna genom att simulera matchernas naturliga osäkerhet och variation.';
+      default: return 'Välj en analysmetod för att börja din professionella matchanalys.';
     }
   };
 
@@ -614,7 +614,7 @@ const CombinedCalculator = ({
          <div className="grid grid-cols-1 gap-8">
            {activeTab === 'xg' && (
              <ResultCard 
-               title="Expected Goals (xG) Resultat" 
+               title="xG-Analys: Kvalitetsbaserade Prediktioner" 
                results={xgResults} 
                method="xg"
                params={xgParams}
@@ -622,7 +622,7 @@ const CombinedCalculator = ({
            )}
            {activeTab === 'poisson' && (
              <ResultCard 
-               title="Poisson-fördelning Resultat" 
+               title="Poisson-Modell: Statistiska Sannolikheter" 
                results={poissonResults} 
                method="poisson"
                params={poissonParams}
@@ -630,7 +630,7 @@ const CombinedCalculator = ({
            )}
            {activeTab === 'montecarlo' && (
              <ResultCard 
-               title="Monte Carlo-simulering Resultat" 
+               title="Monte Carlo: Simuleringsbaserade Resultat" 
                results={monteCarloResults} 
                method="montecarlo"
                params={monteCarloParams}
@@ -641,7 +641,7 @@ const CombinedCalculator = ({
          <div className="space-y-8">
            {/* Comparison View */}
            <div className="bg-white rounded-lg shadow-md p-6">
-             <h3 className="text-xl font-bold mb-6 text-gray-800">Jämförelse av Alla Metoder</h3>
+             <h3 className="text-xl font-bold mb-6 text-gray-800">Komplett Analysöversikt - Alla Metoder</h3>
              
              {/* Win Probabilities Comparison */}
              <div className="mb-8">

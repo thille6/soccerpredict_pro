@@ -41,9 +41,29 @@ const Calculator = () => {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
-          Fotbollsberäkningar
-        </h1>
+        <div className="text-center mb-8">
+          <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+            Professionell Matchanalys & Prediktioner
+          </h1>
+          <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto leading-relaxed">
+            Använd avancerade statistiska modeller för att förutsäga matchresultat med vetenskaplig precision. 
+            Kombinera Expected Goals (xG), Poisson-fördelning och Monte Carlo-simuleringar för djupgående insikter.
+          </p>
+          <div className="mt-4 flex flex-wrap justify-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+            <span className="flex items-center">
+              <span className="w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+              Vetenskapligt baserat
+            </span>
+            <span className="flex items-center">
+              <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+              Tre beräkningsmetoder
+            </span>
+            <span className="flex items-center">
+              <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+              Professionell analys
+            </span>
+          </div>
+        </div>
         <CombinedCalculator
           activeTab={activeTab}
           xgParams={xgParams}

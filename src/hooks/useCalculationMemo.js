@@ -1,7 +1,7 @@
 /**
  * Custom hooks for memoization and performance optimization
  */
-import { useMemo, useCallback, useRef, useEffect } from 'react';
+import { useMemo, useCallback, useRef, useEffect, useState } from 'react';
 
 /**
  * Memoized calculation hook that caches expensive calculations

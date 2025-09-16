@@ -1,0 +1,47 @@
+{
+  "timestamp": "2025-09-16T12:52:54.937Z",
+  "summary": {
+    "total": 5,
+    "passed": 5,
+    "failed": 0,
+    "successRate": "100.0",
+    "duration": 720
+  },
+  "results": [
+    {
+      "name": "calculations.test",
+      "status": "PASSED",
+      "output": "🧪 Starting Calculation Tests...\n================================\nTesting Monte Carlo Simulation...\n✓ Monte Carlo Simulation tests passed\nTesting Poisson Distribution...\n✓ Poisson Distribution tests passed\nTesting xG Calculations...\n✓ xG Calculation tests passed\nTesting Input Validation...\n✓ Input Validation tests passed\nTesting Team Form Analysis...\n✓ Team Form Analysis tests passed\nTesting Seasonal Analysis...\n✓ Seasonal Analysis tests passed\nTesting Correlation Analysis...\n✓ Correlation Analysis tests passed\nTesting Performance...\n✓ Performance test passed: 24.03ms for 5 simulations\nTesting Edge Cases...\n✓ Edge Cases tests passed\n================================\n🎉 All tests passed successfully!\n",
+      "duration": 222
+    },
+    {
+      "name": "extreme-values-test",
+      "status": "PASSED",
+      "output": "",
+      "duration": 346
+    },
+    {
+      "name": "input-validation-test",
+      "status": "PASSED",
+      "output": "",
+      "duration": 468
+    },
+    {
+      "name": "ui-functionality-test",
+      "status": "PASSED",
+      "output": "",
+      "duration": 591
+    },
+    {
+      "name": "comprehensive-test",
+      "status": "PASSED",
+      "output": "",
+      "duration": 714
+    }
+  ],
+  "environment": {
+    "nodeVersion": "v22.16.0",
+    "platform": "win32",
+    "arch": "x64"
+  }
+}

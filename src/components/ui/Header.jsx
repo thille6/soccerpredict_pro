@@ -25,7 +25,7 @@ const Header = ({ savedCalculationsCount = 0, onShowSave, onShowLoad, canSave = 
           {/* Center - Page Title and Save/Load Buttons */}
           <div className="flex items-center space-x-4">
             <h1 className="text-xl font-semibold text-foreground hidden sm:block">
-              Matchkalkylator
+              Avancerad Matchanalys
             </h1>
             
             {/* Save/Load Buttons */}
