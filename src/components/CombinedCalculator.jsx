@@ -438,51 +438,72 @@ const CombinedCalculator = ({
             <ValidatedInput
               ref={firstInputRef}
               label="Hemmalag Expected Goals (xG)"
-               value={xgParams.homeXG}
-               onChange={(value) => onXgChange('homeXG', value)}
-               validationRules={xgErrors.homeXG ? [] : [() => true]}
-               helpText="Förväntade mål för hemmalaget baserat på skottstatistik. Exempel: 1.5 betyder att laget förväntas göra 1.5 mål. Vanliga värden: 0.5-3.0"
+              type="number"
+              min={0}
+              max={6.0}
+              step={0.1}
+              value={xgParams.homeXG}
+              onChange={(value) => onXgChange('homeXG', value)}
+              helpText="Förväntade mål för hemmalaget baserat på skottstatistik. Exempel: 1.5 betyder att laget förväntas göra 1.5 mål. Vanliga värden: 0.5-3.0"
             />
             <ValidatedInput
               label="Bortalag Expected Goals (xG)"
-               value={xgParams.awayXG}
-               onChange={(value) => onXgChange('awayXG', value)}
-               validationRules={xgErrors.awayXG ? [] : [() => true]}
-               helpText="Förväntade mål för bortalaget baserat på skottstatistik. Exempel: 1.2 betyder att laget förväntas göra 1.2 mål. Vanliga värden: 0.5-3.0"
+              type="number"
+              min={0}
+              max={6.0}
+              step={0.1}
+              value={xgParams.awayXG}
+              onChange={(value) => onXgChange('awayXG', value)}
+              helpText="Förväntade mål för bortalaget baserat på skottstatistik. Exempel: 1.2 betyder att laget förväntas göra 1.2 mål. Vanliga värden: 0.5-3.0"
             />
             <ValidatedInput
               label="Hemmalag form"
+              type="number"
+              min={0.5}
+              max={2.0}
+              step={0.1}
               value={xgParams.homeForm}
               onChange={(value) => onXgChange('homeForm', value)}
-              validationRules={xgErrors.homeForm ? [] : [() => true]}
               helpText="Aktuell form för hemmalaget. 1.0 = normal form, 1.2 = bra form (vunnit senaste matcherna), 0.8 = dålig form (förlorat senaste matcherna). Basera på resultat från senaste 3-5 matcherna."
             />
             <ValidatedInput
               label="Bortalag form"
+              type="number"
+              min={0.5}
+              max={2.0}
+              step={0.1}
               value={xgParams.awayForm}
               onChange={(value) => onXgChange('awayForm', value)}
-              validationRules={xgErrors.awayForm ? [] : [() => true]}
               helpText="Aktuell form för bortalaget. 1.0 = normal form, 1.2 = bra form (vunnit senaste matcherna), 0.8 = dålig form (förlorat senaste matcherna). Basera på resultat från senaste 3-5 matcherna."
             />
             <ValidatedInput
               label="Hemmalag försvar (xGA)"
+              type="number"
+              min={0.1}
+              max={3.0}
+              step={0.1}
               value={xgParams.homeDefense}
               onChange={(value) => onXgChange('homeDefense', value)}
-              validationRules={xgErrors.homeDefense ? [] : [() => true]}
               helpText="Expected Goals Against (xGA) för hemmalaget. Visar kvaliteten på chanser som släpps in. 1.0 = genomsnitt, 0.8 = starkt försvar (låg xGA), 1.2 = svagt försvar (hög xGA). Använd xGA-statistik eller insläppta mål per match."
             />
             <ValidatedInput
               label="Bortalag försvar (xGA)"
+              type="number"
+              min={0.1}
+              max={3.0}
+              step={0.1}
               value={xgParams.awayDefense}
               onChange={(value) => onXgChange('awayDefense', value)}
-              validationRules={xgErrors.awayDefense ? [] : [() => true]}
               helpText="Expected Goals Against (xGA) för bortalaget. Visar kvaliteten på chanser som släpps in. 1.0 = genomsnitt, 0.8 = starkt försvar (låg xGA), 1.2 = svagt försvar (hög xGA). Använd xGA-statistik eller insläppta mål per match."
             />
             <ValidatedInput
               label="Motivation"
+              type="number"
+              min={0.7}
+              max={1.5}
+              step={0.1}
               value={xgParams.motivation}
               onChange={(value) => onXgChange('motivation', value)}
-              validationRules={xgErrors.motivation ? [] : [() => true]}
               helpText="Motivationsfaktor baserat på matchens betydelse. 1.0 = normal match, 1.2 = mycket viktig match (derby, slutspel, nedflyttningsstrid), 0.9 = mindre viktig match (säsongen avgjord). Påverkar båda lagens prestation."
             />
           </div>
