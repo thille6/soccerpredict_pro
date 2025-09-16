@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "type": "module",
   "private": true,
-  "homepage": "https://yourusername.github.io/soccerpredict_pro",
+  "homepage": "https://thille6.github.io/soccerpredict_pro",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/soccerpredict_pro.git"
+    "url": "https://github.com/thille6/soccerpredict_pro.git"
   },
   "rocketCritical": {
     "dependencies": [
