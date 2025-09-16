@@ -24,7 +24,7 @@ const ValidatedInput = forwardRef(({
   const [errors, setErrors] = useState([]);
   const [touched, setTouched] = useState(false);
   const [isValid, setIsValid] = useState(true);
-  const [localValue, setLocalValue] = useState(value);
+  const [localValue, setLocalValue] = useState(value || '');
   const debounceRef = useRef(null);
   const { showValidationError } = useCalculationErrorToast();
 
@@ -103,7 +103,7 @@ const ValidatedInput = forwardRef(({
   
   // Sync local value with prop value
   useEffect(() => {
-    setLocalValue(value);
+    setLocalValue(value || '');
   }, [value]);
   
   // Cleanup debounce on unmount

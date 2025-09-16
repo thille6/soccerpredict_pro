@@ -13,7 +13,7 @@ import Icon from './AppIcon';
 
 const CombinedCalculator = ({ 
   activeTab = 'xg', 
-  xgParams = { homeXG: 1.5, awayXG: 1.2, homeDefense: 1.0, awayDefense: 1.0, homeForm: 1.0, motivation: 1.0 }, 
+  xgParams = { homeXG: 1.5, awayXG: 1.2, homeDefense: 1.0, awayDefense: 1.0, homeForm: 1.0, awayForm: 1.0, motivation: 1.0 }, 
   poissonParams = { homeGoals: 1.5, awayGoals: 1.2, homeDefense: 1.0, awayDefense: 1.0 }, 
   monteCarloParams = { simulations: 10000, homeAttack: 1.5, awayAttack: 1.2, homeDefense: 1.0, awayDefense: 1.0 }, 
   onXgChange = () => {}, 
