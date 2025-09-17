@@ -501,6 +501,8 @@ export const calculateAdvancedXGPrediction = (xgParams) => {
   const {
     homeXG,
     awayXG,
+    homeXGA = 1.2,
+    awayXGA = 1.3,
     homeAdvantage = 0.3,
     recentForm = 0,
     homeDefensiveRating = 1.0,
@@ -516,17 +518,47 @@ export const calculateAdvancedXGPrediction = (xgParams) => {
     throw new Error('homeXG och awayXG måste vara nummer');
   }
 
-  if (homeXG < 0 || awayXG < 0) {
-    throw new Error('xG-värden kan inte vara negativa');
+  if (typeof homeXGA !== 'number' || typeof awayXGA !== 'number') {
+    throw new Error('homeXGA och awayXGA måste vara nummer');
+  }
+
+  // Check for NaN and Infinity values
+  if (isNaN(homeXG) || isNaN(awayXG) || isNaN(homeXGA) || isNaN(awayXGA)) {
+    throw new Error('xG- och xGA-värden kan inte vara NaN');
+  }
+
+  if (!isFinite(homeXG) || !isFinite(awayXG) || !isFinite(homeXGA) || !isFinite(awayXGA)) {
+    throw new Error('xG- och xGA-värden kan inte vara Infinity');
+  }
+
+  if (homeXG < 0 || awayXG < 0 || homeXGA < 0 || awayXGA < 0) {
+    throw new Error('xG- och xGA-värden kan inte vara negativa');
   }
 
   if (homeXG > 6 || awayXG > 6) {
     console.warn('Mycket höga xG-värden kan ge opålitliga resultat');
   }
 
-  // Apply defensive adjustments with safe defaults
-  let adjustedHomeXG = homeXG * (2.0 - Math.max(0.5, Math.min(1.5, awayDefensiveRating)));
-  let adjustedAwayXG = awayXG * (2.0 - Math.max(0.5, Math.min(1.5, homeDefensiveRating)));
+  if (homeXGA > 4 || awayXGA > 4) {
+    console.warn('Mycket höga xGA-värden kan ge opålitliga resultat');
+  }
+
+  // Apply defensive adjustments with safe defaults, incorporating xGA values
+  // xGA represents Expected Goals Against - higher values indicate weaker defense
+  // More balanced approach: combine traditional defensive rating with xGA
+  const homeDefensiveBase = Math.max(0.5, Math.min(1.5, awayDefensiveRating));
+  const awayDefensiveBase = Math.max(0.5, Math.min(1.5, homeDefensiveRating));
+  
+  // xGA adjustment: normalize around 1.2 (average), with noticeable impact
+  const homeXGAAdjustment = 1 + (awayXGA - 1.2) * 0.25; // Increased for more noticeable impact
+  const awayXGAAdjustment = 1 + (homeXGA - 1.2) * 0.25;
+  
+  const homeDefensiveStrength = homeDefensiveBase * homeXGAAdjustment;
+  const awayDefensiveStrength = awayDefensiveBase * awayXGAAdjustment;
+  
+  // More conservative adjustment to prevent extreme values
+  let adjustedHomeXG = homeXG * (1.8 - Math.max(0.6, Math.min(1.4, homeDefensiveStrength)));
+  let adjustedAwayXG = awayXG * (1.8 - Math.max(0.6, Math.min(1.4, awayDefensiveStrength)));
 
   // Apply form factors with bounds checking
   const safeHomeFormFactor = Math.max(0.5, Math.min(1.5, homeFormFactor));
@@ -558,9 +590,9 @@ export const calculateAdvancedXGPrediction = (xgParams) => {
   let drawProb = 0;
   let awayWinProb = 0;
 
-  // Home advantage adjustment
-  const homeAdvantageMultiplier = 1.15;
-  const awayAdvantageMultiplier = 0.9;
+  // Home advantage adjustment - more moderate for balanced results
+  const homeAdvantageMultiplier = 1.08; // Reduced from 1.15
+  const awayAdvantageMultiplier = 0.95;  // Increased from 0.9
   const adjustedHomeXGWithAdvantage = adjustedHomeXG * homeAdvantageMultiplier;
   const adjustedAwayXGWithAdvantage = adjustedAwayXG * awayAdvantageMultiplier;
 

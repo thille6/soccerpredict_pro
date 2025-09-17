@@ -3,9 +3,9 @@ import react from '@vitejs/plugin-react'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [react(), tsconfigPaths()],
-  base: '/soccerpredict_pro/',
+  base: mode === 'production' ? '/soccerpredict_pro/' : '/',
   build: {
     outDir: 'dist',
     sourcemap: true,
@@ -14,4 +14,4 @@ export default defineConfig({
     port: 3000,
     open: true,
   },
-})
+}))

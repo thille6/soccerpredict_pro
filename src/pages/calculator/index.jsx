@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CombinedCalculator from '../../components/CombinedCalculator';
+import TeamDataGuide from '../../components/ui/TeamDataGuide';
+import Icon from '../../components/AppIcon';
 
 const Calculator = () => {
   const [activeTab, setActiveTab] = useState('xg');
+  const [showTeamDataGuide, setShowTeamDataGuide] = useState(false);
   const [xgParams, setXgParams] = useState({
     homeXG: 1.5,
     awayXG: 1.2,
@@ -38,6 +41,18 @@ const Calculator = () => {
     setMonteCarloParams(prev => ({ ...prev, [field]: value }));
   };
 
+  useEffect(() => {
+    const handleOpenTeamDataGuide = () => {
+      setShowTeamDataGuide(true);
+    };
+
+    window.addEventListener('openTeamDataGuide', handleOpenTeamDataGuide);
+    
+    return () => {
+      window.removeEventListener('openTeamDataGuide', handleOpenTeamDataGuide);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="container mx-auto px-4 py-8">
@@ -63,6 +78,16 @@ const Calculator = () => {
               Professionell analys
             </span>
           </div>
+          
+          <div className="mt-6">
+            <button
+              onClick={() => setShowTeamDataGuide(true)}
+              className="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors shadow-sm"
+            >
+              <Icon name="HelpCircle" size={16} />
+              <span>Guide: Hur man tar fram lagdata</span>
+            </button>
+          </div>
         </div>
         <CombinedCalculator
           activeTab={activeTab}
@@ -73,6 +98,10 @@ const Calculator = () => {
           onPoissonChange={handlePoissonChange}
           onMonteCarloChange={handleMonteCarloChange}
         />
+        
+        {showTeamDataGuide && (
+          <TeamDataGuide onClose={() => setShowTeamDataGuide(false)} />
+        )}
       </div>
     </div>
   );

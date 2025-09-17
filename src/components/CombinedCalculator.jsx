@@ -13,7 +13,7 @@ import Icon from './AppIcon';
 
 const CombinedCalculator = ({ 
   activeTab = 'xg', 
-  xgParams = { homeXG: 1.5, awayXG: 1.2, homeDefense: 1.0, awayDefense: 1.0, homeForm: 1.0, awayForm: 1.0, motivation: 1.0 }, 
+  xgParams = { homeXG: 1.5, awayXG: 1.2, homeXGA: 1.2, awayXGA: 1.3, homeDefense: 1.0, awayDefense: 1.0, homeForm: 1.0, awayForm: 1.0, motivation: 1.0 }, 
   poissonParams = { homeGoals: 1.5, awayGoals: 1.2, homeDefense: 1.0, awayDefense: 1.0 }, 
   monteCarloParams = { simulations: 10000, homeAttack: 1.5, awayAttack: 1.2, homeDefense: 1.0, awayDefense: 1.0 }, 
   onXgChange = () => {}, 
@@ -77,6 +77,8 @@ const CombinedCalculator = ({
         const xgData = calculateAdvancedXGPrediction({
           homeXG: xgParams.homeXG,
           awayXG: xgParams.awayXG,
+          homeXGA: xgParams.homeXGA,
+          awayXGA: xgParams.awayXGA,
           homeDefensiveRating: xgParams.homeDefense,
           awayDefensiveRating: xgParams.awayDefense,
           homeFormFactor: xgParams.homeForm,
@@ -136,6 +138,8 @@ const CombinedCalculator = ({
             const xgData = calculateAdvancedXGPrediction({
               homeXG: xgParams.homeXG,
               awayXG: xgParams.awayXG,
+              homeXGA: xgParams.homeXGA,
+              awayXGA: xgParams.awayXGA,
               homeDefensiveRating: xgParams.homeDefense,
               awayDefensiveRating: xgParams.awayDefense,
               homeFormFactor: xgParams.homeForm,
@@ -373,214 +377,289 @@ const CombinedCalculator = ({
               <div>
                 <p><strong>Expected Goals (xG) och xGA värden:</strong></p>
                 <ul className="list-disc list-inside ml-4 space-y-1">
-                  <li><strong>xG (anfall):</strong> Hämta från FBref, Understat eller SofaScore</li>
-                  <li><strong>xGA (försvar):</strong> Expected Goals Against - kvaliteten på chanser som släpps in</li>
-                  <li>Använd genomsnittliga värden från senaste 5-10 matcherna</li>
-                  <li>Justera för hemmaplan: xG +0.1-0.3, xGA -0.1-0.2 (bättre hemma)</li>
-                  <li>Exempel: Lag med 1.4 xG och 1.1 xGA hemma → använd 1.6 xG, 0.9 xGA</li>
+                  <li><strong>xG (anfall):</strong> Genomsnittliga Expected Goals per match - hämta från FBref, Understat eller SofaScore</li>
+                  <li><strong>xGA (försvar):</strong> Expected Goals Against per match - kvaliteten på chanser som laget släpper in</li>
+                  <li><strong>Datakällor:</strong> Använd genomsnittliga värden från senaste 5-10 matcherna</li>
+                  <li><strong>Hemmaplansjustering:</strong> xG +0.1-0.3, xGA -0.1-0.2 (bättre hemma)</li>
+                  <li><strong>Exempel:</strong> Lag med 1.4 xG och 1.1 xGA hemma → använd 1.6 xG, 0.9 xGA</li>
+                  <li><strong>Typiska värden:</strong> xG: 0.8-2.5, xGA: 0.8-2.2 (lägre xGA = bättre försvar)</li>
                 </ul>
               </div>
             )}
             {activeTab === 'poisson' && (
               <div>
-                <p><strong>Attack- och försvarsstyrka:</strong></p>
+                <p><strong>Poisson-fördelning parametrar:</strong></p>
                 <ul className="list-disc list-inside ml-4 space-y-1">
-                  <li>Attackstyrka = Genomsnittliga mål per match (senaste 10 matcher)</li>
-                  <li>Försvarsstyrka = Genomsnittliga insläppta mål per match</li>
-                  <li>Justera för hemmaplan: hemmalag +15%, bortalag -10%</li>
-                  <li>Exempel: Lag med 1.5 mål/match hemma → använd 1.7</li>
+                  <li><strong>Attackstyrka:</strong> Genomsnittliga mål per match för laget</li>
+                  <li><strong>Försvarsstyrka:</strong> Genomsnittliga insläppta mål per match</li>
+                  <li>Använd data från senaste 10-15 matcherna för bästa precision</li>
+                  <li>Justera för hemmaplan: +0.2-0.4 mål för hemmalaget</li>
                 </ul>
               </div>
             )}
             {activeTab === 'montecarlo' && (
               <div>
-                <p><strong>Monte Carlo-parametrar:</strong></p>
+                <p><strong>Monte Carlo-simulering parametrar:</strong></p>
                 <ul className="list-disc list-inside ml-4 space-y-1">
-                  <li>Använd samma värden som för Poisson-metoden</li>
-                  <li>Simuleringar: 10000 för snabba resultat, 100000 för precision</li>
-                  <li>Metoden lägger automatiskt till realistisk variation</li>
-                  <li>Bra för att testa "vad händer om"-scenarion</li>
+                  <li><strong>Simuleringar:</strong> Fler simuleringar = högre precision (10,000-100,000)</li>
+                  <li><strong>Attack/Försvar:</strong> Liknande Poisson men justerat för slumpmässighet</li>
+                  <li>Bäst för komplexa scenarier med många variabler</li>
                 </ul>
               </div>
             )}
           </div>
         </details>
-      </div>
 
-      {/* Input Parameters */}
-      <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6 sm:mb-8">
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-4">
-          <div className="flex items-center gap-3">
-            <h3 className="text-lg sm:text-xl font-bold text-gray-800">Parametrar</h3>
-            <ShortcutHelpButton className="text-gray-400 hover:text-gray-600" />
+        {/* Input Form Section */}
+        <div className="bg-white rounded-lg shadow-md p-4 sm:p-6 mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6">
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-800 mb-2 sm:mb-0">
+              Parametrar för {getTitle()}
+            </h3>
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 w-full sm:w-auto">
+              <button
+                onClick={calculateResults}
+                disabled={isCalculating}
+                className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg transition-colors flex items-center justify-center text-sm sm:text-base"
+              >
+                {isCalculating ? (
+                  <>
+                    <LoadingSpinner size="sm" className="mr-2" />
+                    Beräknar...
+                  </>
+                ) : (
+                  <>
+                    <Icon name="calculator" className="mr-2" />
+                    Beräkna
+                  </>
+                )}
+              </button>
+              <ShortcutHelpButton />
+              <button
+                onClick={() => window.dispatchEvent(new CustomEvent('openTeamDataGuide'))}
+                className="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg transition-colors flex items-center text-sm"
+                title="Guide för lagdata"
+              >
+                <Icon name="HelpCircle" size={16} className="mr-1" />
+                <span className="hidden sm:inline">Lagdata</span>
+              </button>
+            </div>
           </div>
-          <button
-            onClick={calculateResults}
-            disabled={isCalculating}
-            className="bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-semibold py-2 px-4 sm:px-6 rounded-lg transition-colors duration-200 flex items-center gap-2 text-sm sm:text-base w-full sm:w-auto justify-center"
-          >
-            {isCalculating ? (
-              <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                Beräknar...
-              </>
-            ) : (
-              <>
-                <Icon name="calculator" className="w-4 h-4" />
-                Beräkna
-              </>
+
+          {/* Input Fields */}
+          <div className="space-y-4">
+            {activeTab === 'xg' && (
+              <div className="space-y-4">
+                <ValidatedInput
+                  label="Hemmalag xG"
+                  type="number"
+                  min={0.1}
+                  max={5.0}
+                  step={0.1}
+                  value={xgParams.homeXG}
+                  onChange={(value) => onXgChange('homeXG', value)}
+                  validationRules={xgErrors.homeXG ? [] : [() => true]}
+                  helpText="Expected Goals för hemmalaget. Min: 0.1, Max: 5.0. Vanliga värden: 0.8-2.5. Exempel: 1.8 = starkt anfall, 1.2 = genomsnitt, 0.9 = svagt anfall."
+                />
+                <ValidatedInput
+                  label="Bortalag xG"
+                  type="number"
+                  min={0.1}
+                  max={5.0}
+                  step={0.1}
+                  value={xgParams.awayXG}
+                  onChange={(value) => onXgChange('awayXG', value)}
+                  validationRules={xgErrors.awayXG ? [] : [() => true]}
+                  helpText="Expected Goals för bortalaget. Min: 0.1, Max: 5.0. Vanliga värden: 0.6-2.2. Exempel: 1.5 = starkt anfall, 1.0 = genomsnitt, 0.7 = svagt anfall."
+                />
+                <ValidatedInput
+                  label="Hemmalag xGA"
+                  type="number"
+                  min={0.1}
+                  max={5.0}
+                  step={0.1}
+                  value={xgParams.homeXGA || 1.2}
+                  onChange={(value) => onXgChange('homeXGA', value)}
+                  validationRules={xgErrors.homeXGA ? [] : [() => true]}
+                  helpText="Expected Goals Against för hemmalaget. Min: 0.1, Max: 5.0. Vanliga värden: 0.8-2.0. Exempel: 0.9 = starkt försvar, 1.2 = genomsnitt, 1.8 = svagt försvar."
+                />
+                <ValidatedInput
+                  label="Bortalag xGA"
+                  type="number"
+                  min={0.1}
+                  max={5.0}
+                  step={0.1}
+                  value={xgParams.awayXGA || 1.3}
+                  onChange={(value) => onXgChange('awayXGA', value)}
+                  validationRules={xgErrors.awayXGA ? [] : [() => true]}
+                  helpText="Expected Goals Against för bortalaget. Min: 0.1, Max: 5.0. Vanliga värden: 0.9-2.2. Exempel: 1.0 = starkt försvar, 1.3 = genomsnitt, 2.0 = svagt försvar."
+                />
+                <ValidatedInput
+                  label="Hemmalag Försvarsstyrka"
+                  type="number"
+                  min={0.5}
+                  max={2.0}
+                  step={0.1}
+                  value={xgParams.homeDefense}
+                  onChange={(value) => onXgChange('homeDefense', value)}
+                  validationRules={xgErrors.homeDefense ? [] : [() => true]}
+                  helpText="Defensiv multiplikator för hemmalaget. Min: 0.5, Max: 2.0. Vanliga värden: 0.8-1.3. Exempel: 0.9 = starkt försvar, 1.0 = genomsnitt, 1.2 = svagt försvar."
+                />
+                <ValidatedInput
+                  label="Bortalag Försvarsstyrka"
+                  type="number"
+                  min={0.5}
+                  max={2.0}
+                  step={0.1}
+                  value={xgParams.awayDefense}
+                  onChange={(value) => onXgChange('awayDefense', value)}
+                  validationRules={xgErrors.awayDefense ? [] : [() => true]}
+                  helpText="Defensiv multiplikator för bortalaget. Min: 0.5, Max: 2.0. Vanliga värden: 0.8-1.3. Exempel: 0.8 = starkt försvar, 1.0 = genomsnitt, 1.4 = svagt försvar."
+                />
+                <ValidatedInput
+                  label="Hemmalag Form"
+                  type="number"
+                  min={0.5}
+                  max={1.5}
+                  step={0.1}
+                  value={xgParams.homeForm}
+                  onChange={(value) => onXgChange('homeForm', value)}
+                  validationRules={xgErrors.homeForm ? [] : [() => true]}
+                  helpText="Formfaktor för hemmalaget. Min: 0.5, Max: 1.5. Vanliga värden: 0.8-1.2. Exempel: 1.1 = bra form, 1.0 = normal form, 0.9 = dålig form."
+                />
+                <ValidatedInput
+                  label="Bortalag Form"
+                  type="number"
+                  min={0.5}
+                  max={1.5}
+                  step={0.1}
+                  value={xgParams.awayForm}
+                  onChange={(value) => onXgChange('awayForm', value)}
+                  validationRules={xgErrors.awayForm ? [] : [() => true]}
+                  helpText="Formfaktor för bortalaget. Min: 0.5, Max: 1.5. Vanliga värden: 0.8-1.2. Exempel: 1.0 = bra form, 1.0 = normal form, 0.8 = dålig form."
+                />
+                <ValidatedInput
+                  label="Motivationsfaktor"
+                  type="number"
+                  min={0.8}
+                  max={1.3}
+                  step={0.1}
+                  value={xgParams.motivation}
+                  onChange={(value) => onXgChange('motivation', value)}
+                  validationRules={xgErrors.motivation ? [] : [() => true]}
+                  helpText="Motivationsfaktor för matchen. Min: 0.8, Max: 1.3. Vanliga värden: 0.9-1.2. Exempel: 1.2 = hög motivation, 1.0 = normal, 0.9 = låg motivation."
+                />
+              </div>
             )}
-          </button>
-        </div>
-        
-        {activeTab === 'xg' && (
-          <div className="space-y-4">
-            <ValidatedInput
-              ref={firstInputRef}
-              label="Hemmalag Expected Goals (xG)"
-              type="number"
-              min={0}
-              max={6.0}
-              step={0.1}
-              value={xgParams.homeXG}
-              onChange={(value) => onXgChange('homeXG', value)}
-              helpText="Förväntade mål för hemmalaget baserat på skottstatistik. Exempel: 1.5 betyder att laget förväntas göra 1.5 mål. Vanliga värden: 0.5-3.0"
-            />
-            <ValidatedInput
-              label="Bortalag Expected Goals (xG)"
-              type="number"
-              min={0}
-              max={6.0}
-              step={0.1}
-              value={xgParams.awayXG}
-              onChange={(value) => onXgChange('awayXG', value)}
-              helpText="Förväntade mål för bortalaget baserat på skottstatistik. Exempel: 1.2 betyder att laget förväntas göra 1.2 mål. Vanliga värden: 0.5-3.0"
-            />
-            <ValidatedInput
-              label="Hemmalag form"
-              type="number"
-              min={0.5}
-              max={2.0}
-              step={0.1}
-              value={xgParams.homeForm}
-              onChange={(value) => onXgChange('homeForm', value)}
-              helpText="Aktuell form för hemmalaget. 1.0 = normal form, 1.2 = bra form (vunnit senaste matcherna), 0.8 = dålig form (förlorat senaste matcherna). Basera på resultat från senaste 3-5 matcherna."
-            />
-            <ValidatedInput
-              label="Bortalag form"
-              type="number"
-              min={0.5}
-              max={2.0}
-              step={0.1}
-              value={xgParams.awayForm}
-              onChange={(value) => onXgChange('awayForm', value)}
-              helpText="Aktuell form för bortalaget. 1.0 = normal form, 1.2 = bra form (vunnit senaste matcherna), 0.8 = dålig form (förlorat senaste matcherna). Basera på resultat från senaste 3-5 matcherna."
-            />
-            <ValidatedInput
-              label="Hemmalag försvar (xGA)"
-              type="number"
-              min={0.1}
-              max={3.0}
-              step={0.1}
-              value={xgParams.homeDefense}
-              onChange={(value) => onXgChange('homeDefense', value)}
-              helpText="Expected Goals Against (xGA) för hemmalaget. Visar kvaliteten på chanser som släpps in. 1.0 = genomsnitt, 0.8 = starkt försvar (låg xGA), 1.2 = svagt försvar (hög xGA). Använd xGA-statistik eller insläppta mål per match."
-            />
-            <ValidatedInput
-              label="Bortalag försvar (xGA)"
-              type="number"
-              min={0.1}
-              max={3.0}
-              step={0.1}
-              value={xgParams.awayDefense}
-              onChange={(value) => onXgChange('awayDefense', value)}
-              helpText="Expected Goals Against (xGA) för bortalaget. Visar kvaliteten på chanser som släpps in. 1.0 = genomsnitt, 0.8 = starkt försvar (låg xGA), 1.2 = svagt försvar (hög xGA). Använd xGA-statistik eller insläppta mål per match."
-            />
-            <ValidatedInput
-              label="Motivation"
-              type="number"
-              min={0.7}
-              max={1.5}
-              step={0.1}
-              value={xgParams.motivation}
-              onChange={(value) => onXgChange('motivation', value)}
-              helpText="Motivationsfaktor baserat på matchens betydelse. 1.0 = normal match, 1.2 = mycket viktig match (derby, slutspel, nedflyttningsstrid), 0.9 = mindre viktig match (säsongen avgjord). Påverkar båda lagens prestation."
-            />
-          </div>
-        )}
-        
-        {activeTab === 'poisson' && (
-          <div className="space-y-4">
-            <ValidatedInput
-              label="Hemmalag Attackstyrka"
-              value={poissonParams.homeGoals}
-              onChange={(value) => onPoissonChange('homeGoals', value)}
-              validationRules={poissonErrors.homeGoals ? [] : [() => true]}
-              helpText="Offensiv styrka baserat på genomsnittliga mål per match. Exempel: 1.8 = starkt anfall, 1.0 = genomsnitt, 0.6 = svagt anfall. Vanliga värden: 0.5-2.5"
-            />
-            <ValidatedInput
-              label="Bortalag Attackstyrka"
-              value={poissonParams.awayGoals}
-              onChange={(value) => onPoissonChange('awayGoals', value)}
-              validationRules={poissonErrors.awayGoals ? [] : [() => true]}
-              helpText="Offensiv styrka baserat på genomsnittliga mål per match. Exempel: 1.5 = starkt anfall, 1.0 = genomsnitt, 0.7 = svagt anfall. Vanliga värden: 0.5-2.5"
-            />
-            <ValidatedInput
-              label="Hemmalag Försvarsstyrka"
-              value={poissonParams.homeDefense}
-              onChange={(value) => onPoissonChange('homeDefense', value)}
-              validationRules={poissonErrors.homeDefense ? [] : [() => true]}
-              helpText="Defensiv styrka baserat på insläppta mål per match. Exempel: 0.8 = starkt försvar, 1.0 = genomsnitt, 1.4 = svagt försvar. Lägre värde = bättre försvar"
-            />
-            <ValidatedInput
-              label="Bortalag Försvarsstyrka"
-              value={poissonParams.awayDefense}
-              onChange={(value) => onPoissonChange('awayDefense', value)}
-              validationRules={poissonErrors.awayDefense ? [] : [() => true]}
-              helpText="Defensiv styrka baserat på insläppta mål per match. Exempel: 1.0 = starkt försvar, 1.2 = genomsnitt, 1.6 = svagt försvar. Lägre värde = bättre försvar"
-            />
-          </div>
-        )}
-        
-        {activeTab === 'montecarlo' && (
-          <div className="space-y-4">
-            <ValidatedInput
-              label="Antal simuleringar"
-              value={monteCarloParams.simulations}
-              onChange={(value) => onMonteCarloChange('simulations', value)}
-              validationRules={monteCarloErrors.simulations ? [] : [() => true]}
-              helpText="Antal Monte Carlo-simuleringar att köra. Exempel: 10000 = snabbt, 100000 = mer exakt. Vanliga värden: 10000-100000"
-            />
-            <ValidatedInput
-              label="Hemmalag Attackstyrka (MC)"
-              value={monteCarloParams.homeAttack}
-              onChange={(value) => onMonteCarloChange('homeAttack', value)}
-              validationRules={monteCarloErrors.homeAttack ? [] : [() => true]}
-              helpText="Offensiv styrka för Monte Carlo-simulering. Baserat på genomsnittliga mål per match med variation. Exempel: 1.7 = starkt anfall, 1.0 = genomsnitt"
-            />
-            <ValidatedInput
-              label="Hemmalag Försvarsstyrka (MC)"
-              value={monteCarloParams.homeDefense}
-              onChange={(value) => onMonteCarloChange('homeDefense', value)}
-              validationRules={monteCarloErrors.homeDefense ? [] : [() => true]}
-              helpText="Defensiv styrka för Monte Carlo-simulering. Baserat på insläppta mål per match. Exempel: 0.9 = starkt försvar, 1.3 = svagt försvar"
-            />
-            <ValidatedInput
-              label="Bortalag Attackstyrka (MC)"
-              value={monteCarloParams.awayAttack}
-              onChange={(value) => onMonteCarloChange('awayAttack', value)}
-              validationRules={monteCarloErrors.awayAttack ? [] : [() => true]}
-              helpText="Offensiv styrka för Monte Carlo-simulering. Baserat på genomsnittliga mål per match med variation. Exempel: 1.4 = starkt anfall, 0.8 = svagt anfall"
-            />
-            <ValidatedInput
-               label="Bortalag Försvarsstyrka (MC)"
-               value={monteCarloParams.awayDefense}
-               onChange={(value) => onMonteCarloChange('awayDefense', value)}
-               validationRules={monteCarloErrors.awayDefense ? [] : [() => true]}
-               helpText="Defensiv styrka för Monte Carlo-simulering. Baserat på insläppta mål per match. Exempel: 1.1 = starkt försvar, 1.5 = svagt försvar"
-             />
+            {activeTab === 'poisson' && (
+              <div className="space-y-4">
+                <ValidatedInput
+                  label="Hemmalag Attackstyrka"
+                  type="number"
+                  min={0.1}
+                  max={4.0}
+                  step={0.1}
+                  value={poissonParams.homeGoals}
+                  onChange={(value) => onPoissonChange('homeGoals', value)}
+                  validationRules={poissonErrors.homeGoals ? [] : [() => true]}
+                  helpText="Offensiv styrka baserat på genomsnittliga mål per match. Min: 0.1, Max: 4.0. Vanliga värden: 0.5-2.5. Exempel: 1.8 = starkt anfall, 1.0 = genomsnitt, 0.6 = svagt anfall."
+                />
+                <ValidatedInput
+                  label="Bortalag Attackstyrka"
+                  type="number"
+                  min={0.1}
+                  max={4.0}
+                  step={0.1}
+                  value={poissonParams.awayGoals}
+                  onChange={(value) => onPoissonChange('awayGoals', value)}
+                  validationRules={poissonErrors.awayGoals ? [] : [() => true]}
+                  helpText="Offensiv styrka baserat på genomsnittliga mål per match. Min: 0.1, Max: 4.0. Vanliga värden: 0.5-2.5. Exempel: 1.5 = starkt anfall, 1.0 = genomsnitt, 0.7 = svagt anfall."
+                />
+                <ValidatedInput
+                  label="Hemmalag Försvarsstyrka"
+                  type="number"
+                  min={0.1}
+                  max={3.0}
+                  step={0.1}
+                  value={poissonParams.homeDefense}
+                  onChange={(value) => onPoissonChange('homeDefense', value)}
+                  validationRules={poissonErrors.homeDefense ? [] : [() => true]}
+                  helpText="Defensiv styrka baserat på insläppta mål per match. Min: 0.1, Max: 3.0. Vanliga värden: 0.6-1.8. Exempel: 0.8 = starkt försvar, 1.0 = genomsnitt, 1.4 = svagt försvar. Lägre värde = bättre försvar."
+                />
+                <ValidatedInput
+                  label="Bortalag Försvarsstyrka"
+                  type="number"
+                  min={0.1}
+                  max={3.0}
+                  step={0.1}
+                  value={poissonParams.awayDefense}
+                  onChange={(value) => onPoissonChange('awayDefense', value)}
+                  validationRules={poissonErrors.awayDefense ? [] : [() => true]}
+                  helpText="Defensiv styrka baserat på insläppta mål per match. Min: 0.1, Max: 3.0. Vanliga värden: 0.6-1.8. Exempel: 1.0 = starkt försvar, 1.2 = genomsnitt, 1.6 = svagt försvar. Lägre värde = bättre försvar."
+                />
+              </div>
+            )}
+            {activeTab === 'montecarlo' && (
+              <div className="space-y-4">
+                <ValidatedInput
+                  label="Antal simuleringar"
+                  type="number"
+                  min={1000}
+                  max={1000000}
+                  step={1000}
+                  value={monteCarloParams.simulations}
+                  onChange={(value) => onMonteCarloChange('simulations', value)}
+                  validationRules={monteCarloErrors.simulations ? [] : [() => true]}
+                  helpText="Antal Monte Carlo-simuleringar att köra. Min: 1,000, Max: 1,000,000. Vanliga värden: 10,000-100,000. Exempel: 10,000 = snabbt resultat, 100,000 = högre precision."
+                />
+                <ValidatedInput
+                  label="Hemmalag Attackstyrka (MC)"
+                  type="number"
+                  min={0.1}
+                  max={4.0}
+                  step={0.1}
+                  value={monteCarloParams.homeAttack}
+                  onChange={(value) => onMonteCarloChange('homeAttack', value)}
+                  validationRules={monteCarloErrors.homeAttack ? [] : [() => true]}
+                  helpText="Offensiv styrka för Monte Carlo-simulering. Min: 0.1, Max: 4.0. Vanliga värden: 0.5-2.5. Exempel: 1.7 = starkt anfall, 1.0 = genomsnitt, 0.8 = svagt anfall."
+                />
+                <ValidatedInput
+                  label="Hemmalag Försvarsstyrka (MC)"
+                  type="number"
+                  min={0.1}
+                  max={3.0}
+                  step={0.1}
+                  value={monteCarloParams.homeDefense}
+                  onChange={(value) => onMonteCarloChange('homeDefense', value)}
+                  validationRules={monteCarloErrors.homeDefense ? [] : [() => true]}
+                  helpText="Defensiv styrka för Monte Carlo-simulering. Min: 0.1, Max: 3.0. Vanliga värden: 0.6-1.8. Exempel: 0.9 = starkt försvar, 1.0 = genomsnitt, 1.3 = svagt försvar. Lägre värde = bättre försvar."
+                />
+                <ValidatedInput
+                  label="Bortalag Attackstyrka (MC)"
+                  type="number"
+                  min={0.1}
+                  max={4.0}
+                  step={0.1}
+                  value={monteCarloParams.awayAttack}
+                  onChange={(value) => onMonteCarloChange('awayAttack', value)}
+                  validationRules={monteCarloErrors.awayAttack ? [] : [() => true]}
+                  helpText="Offensiv styrka för Monte Carlo-simulering. Min: 0.1, Max: 4.0. Vanliga värden: 0.5-2.5. Exempel: 1.4 = starkt anfall, 1.0 = genomsnitt, 0.8 = svagt anfall."
+                />
+                <ValidatedInput
+                   label="Bortalag Försvarsstyrka (MC)"
+                   type="number"
+                   min={0.1}
+                   max={3.0}
+                   step={0.1}
+                   value={monteCarloParams.awayDefense}
+                   onChange={(value) => onMonteCarloChange('awayDefense', value)}
+                   validationRules={monteCarloErrors.awayDefense ? [] : [() => true]}
+                   helpText="Defensiv styrka för Monte Carlo-simulering. Min: 0.1, Max: 3.0. Vanliga värden: 0.6-1.8. Exempel: 1.1 = starkt försvar, 1.2 = genomsnitt, 1.5 = svagt försvar. Lägre värde = bättre försvar."
+                 />
+               </div>
+             )}
            </div>
-         )}
+          </div>
        </div>
 
        {/* Results Toggle */}

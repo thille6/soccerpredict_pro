@@ -12,23 +12,22 @@ const mockMath = {
   log: Math.log
 };
 
-// Import calculation modules (would be actual imports in real environment)
-const { 
+// Import calculation modules using ES module syntax
+import { 
   monteCarloSimulator, 
   enhancedPoissonCalculator, 
   validateInputs 
-} = require('../utils/improvedMath');
+} from '../utils/improvedMath.js';
 
-const { 
-  xgCalculator, 
-  calculateMatchXGPrediction 
-} = require('../utils/xgCalculations');
+import { 
+  calculateAdvancedXGPrediction 
+} from '../utils/xgCalculations.js';
 
-const { 
+import { 
   TeamFormAnalyzer, 
   SeasonalAnalyzer, 
   CorrelationAnalyzer 
-} = require('../utils/advancedModels');
+} from '../utils/advancedModels.js';
 
 // Test utilities
 const assertApproximatelyEqual = (actual, expected, tolerance = 0.01) => {
@@ -154,7 +153,7 @@ const testXGCalculation = () => {
     }
   };
   
-  const results = calculateMatchXGPrediction(params.homeTeam, params.awayTeam);
+  const results = calculateAdvancedXGPrediction(params.homeTeam, params.awayTeam);
   
   // Test result structure
   if (!results.homeWinProbability || !results.drawProbability || !results.awayWinProbability) {
@@ -420,6 +419,6 @@ if (typeof module !== 'undefined' && module.exports) {
 }
 
 // Auto-run tests if this file is executed directly
-if (typeof window === 'undefined' && require.main === module) {
+if (typeof window === 'undefined' && import.meta.url === `file://${process.argv[1]}`) {
   runAllTests();
 }

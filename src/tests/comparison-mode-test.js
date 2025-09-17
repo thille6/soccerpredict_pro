@@ -1,7 +1,6 @@
 // Test för jämförelseläget - kontrollerar att alla tre metoder beräknas samtidigt
 import { calculateAdvancedXGPrediction } from '../utils/xgCalculations.js';
-import { enhancedPoissonCalculator } from '../utils/improvedMath.js';
-import { monteCarloSimulator } from '../utils/improvedMath.js';
+import { enhancedPoissonCalculator, monteCarloSimulator } from '../utils/improvedMath.js';
 
 const testParams = {
   xgParams: {
