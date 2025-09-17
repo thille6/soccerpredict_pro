@@ -1,3 +1,16 @@
+// 🛡️ FALLBACK-KOPIA AV TEAMDATAGUIDE 🛡️
+// Denna fil är en extra säkerhetskopia av TeamDataGuide-komponenten
+// Använd endast om originalfilen försvinner eller skadas
+// Skapad: 2025-01-17
+// 
+// INSTRUKTIONER VID ÅTERSTÄLLNING:
+// 1. Kopiera innehållet nedan
+// 2. Skapa ny fil: src/components/ui/TeamDataGuide.jsx
+// 3. Klistra in innehållet
+// 4. Kontrollera att import-sökvägar stämmer
+// 5. Testa att komponenten fungerar
+
+export const TEAM_DATA_GUIDE_BACKUP = `
 // ⚠️⚠️⚠️ KRITISK KOMPONENT - TA ALDRIG BORT! ⚠️⚠️⚠️
 // Denna komponent är EXTREMT viktig för användarupplevelsen
 // Backup finns i: BACKUP_TeamDataGuide.jsx
@@ -292,11 +305,11 @@ const TeamDataGuide = ({ onClose }) => {
                 <button
                   key={key}
                   onClick={() => setActiveSection(key)}
-                  className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
+                  className={\`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors \${
                     activeSection === key
                       ? 'bg-blue-100 text-blue-800 border border-blue-200'
                       : 'text-gray-700 hover:bg-gray-100'
-                  }`}
+                  }\`}
                 >
                   <Icon name={section.icon} size={16} />
                   <span className="text-sm font-medium">{section.title}</span>
@@ -327,3 +340,20 @@ const TeamDataGuide = ({ onClose }) => {
 };
 
 export default TeamDataGuide;
+`;
+
+// Instruktioner för återställning:
+export const RESTORE_INSTRUCTIONS = {
+  step1: "Kopiera TEAM_DATA_GUIDE_BACKUP konstanten ovan",
+  step2: "Skapa ny fil: src/components/ui/TeamDataGuide.jsx", 
+  step3: "Klistra in innehållet (ta bort backticks och export)",
+  step4: "Kontrollera import-sökvägar",
+  step5: "Testa komponenten",
+  backupLocation: "src/components/ui/BACKUP_TeamDataGuide.jsx",
+  documentation: "TEAMDATA_GUIDE_DOCUMENTATION.md"
+};
+
+export default {
+  TEAM_DATA_GUIDE_BACKUP,
+  RESTORE_INSTRUCTIONS
+};

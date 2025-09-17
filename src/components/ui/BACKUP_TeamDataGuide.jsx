@@ -1,9 +1,7 @@
-// ⚠️⚠️⚠️ KRITISK KOMPONENT - TA ALDRIG BORT! ⚠️⚠️⚠️
-// Denna komponent är EXTREMT viktig för användarupplevelsen
-// Backup finns i: BACKUP_TeamDataGuide.jsx
-// Dokumentation: TEAMDATA_GUIDE_DOCUMENTATION.md
-// Kontakta utvecklare innan ändringar görs!
-// ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
+// ⚠️ VIKTIGT: DENNA FIL ÄR EN BACKUP AV TEAMDATAGUIDE - TA ALDRIG BORT! ⚠️
+// Skapad: 2025-01-17
+// Syfte: Säkerhetskopia av den viktiga lagdata-guiden
+// Om originalet försvinner, kopiera innehållet från denna fil
 
 import React, { useState } from 'react';
 import Icon from '../AppIcon';
